@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<launch>
+
+    <arg name="fcu_url" default= "udp://:14540@200.0.0.1:14580" />
+
+    <include file="$(find mavros)/launch/px4_virtual.launch">
+    <arg name="fcu_url" value="$(arg fcu_url)" />
+    </include>
+
+    
+    <node pkg="offboard" name="offboard_node" type="offboard_node" />
+
+</launch>
