@@ -13,17 +13,27 @@ project(offboard)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  rosbag
   sensor_msgs
   std_msgs
   roslaunch
+  message_generation
 )
 
 find_package(cmake_modules REQUIRED)
 
 
-catkin_package(
-    CATKIN_DEPENDS roscpp
+add_message_files(DIRECTORY msg
+FILES
+Cycle.msg
 )
+
+## Generate added messages and services with any dependencies listed here
+generate_messages(
+DEPENDENCIES
+std_msgs  # Or other packages containing msgs
+)
+
 
 roslaunch_add_file_check(launch)
 
@@ -48,11 +58,11 @@ if (GeographicLib_LIBRARIES)
   endif ()
   endif ()
 
+
 catkin_package(
-  DEPENDS Boost
   INCLUDE_DIRS include
 
-  CATKIN_DEPENDS roscpp sensor_msgs std_msgs
+  CATKIN_DEPENDS roscpp sensor_msgs std_msgs message_runtime
 )
 
 install(
@@ -61,10 +71,12 @@ install(
 )
 include_directories(
   include
-  ${Boost_INCLUDE_DIRS}
   ${roscpp_INCLUDE_DIRS}
+  ${robag_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
 )
+
+
 
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(${PROJECT_NAME}_node 

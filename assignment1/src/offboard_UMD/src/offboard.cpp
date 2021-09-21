@@ -16,6 +16,7 @@
 #include <mavros_msgs/PositionTarget.h>
 #include <mavros_msgs/CommandBool.h>
 #include <mavros_msgs/GlobalPositionTarget.h>
+#include <offboard/Cycle.h>
 
 #include <takeoff.h>
 #include <sensors.h>
@@ -34,6 +35,8 @@ int main(int argc, char **argv)
 
     Sensors sensors(node);
 
+    ros::Publisher cycle_pub = node.advertise<offboard::Cycle>("mavros/path_cycle", 1);
+
     ros::Rate rate(20.0);
 
     ros::Time currtime {};
@@ -41,6 +44,7 @@ int main(int argc, char **argv)
     double timediff {0};
 
     int cycle {0};
+    offboard::Cycle cyc;
     geometry_msgs::Point desired_position;
 
     while (ros::ok() && cycle < 4)
@@ -51,7 +55,8 @@ int main(int argc, char **argv)
         desired_position.y = 0;
         desired_position.z = 10;
 
-        while(ros::ok() && timediff < 3)
+        // stay for 2 seconds
+        while(ros::ok() && timediff < 2)
         {
             takeoff.go_to_position(desired_position.x, desired_position.y, desired_position.z);
             if (sensors.get_position().x + 0.01 > desired_position.x && sensors.get_position().x - 0.01 < desired_position.x && 
@@ -66,6 +71,12 @@ int main(int argc, char **argv)
             }
         }
 
+        // 1 cycle has been performed
+        cyc.stamp.sec = ros::Time::now().toSec();
+        cyc.stamp.nsec = ros::Time::now().toNSec();
+        cyc.cycle = cycle;
+        cycle_pub.publish(cyc);
+
         
         timediff = 0;
         lasttime = 0;
@@ -75,7 +86,8 @@ int main(int argc, char **argv)
         desired_position = sensors.get_position();
         desired_position.x += 10;
 
-        while(ros::ok() && timediff < 3)
+        // stay for 2 seconds
+        while(ros::ok() && timediff < 2)
         {
             takeoff.go_to_position(desired_position.x, desired_position.y, desired_position.z);
             if (sensors.get_position().x + 0.01 > desired_position.x && sensors.get_position().x - 0.01 < desired_position.x && 
@@ -98,7 +110,8 @@ int main(int argc, char **argv)
         desired_position = sensors.get_position();
         desired_position.z += 15;
 
-        while(ros::ok() && timediff < 3)
+        // stay for 2 seconds
+        while(ros::ok() && timediff < 2)
         {
             takeoff.go_to_position(desired_position.x, desired_position.y, desired_position.z);
             if (sensors.get_position().x + 0.01 > desired_position.x && sensors.get_position().x - 0.01 < desired_position.x && 
@@ -121,7 +134,8 @@ int main(int argc, char **argv)
         desired_position = sensors.get_position();
         desired_position.y += 5;
 
-        while(ros::ok() && timediff < 3)
+        // stay for 2 seconds
+        while(ros::ok() && timediff < 2)3)
         {
             takeoff.go_to_position(desired_position.x, desired_position.y, desired_position.z);
             if (sensors.get_position().x + 0.01 > desired_position.x && sensors.get_position().x - 0.01 < desired_position.x && 
@@ -148,7 +162,8 @@ int main(int argc, char **argv)
     desired_position.y = 0;
     desired_position.z = 10;
 
-    while(ros::ok() && timediff < 3)
+    // stay for 2 seconds
+    while(ros::ok() && timediff < 2)
     {
         takeoff.go_to_position(desired_position.x, desired_position.y, desired_position.z);
         if (sensors.get_position().x + 0.01 > desired_position.x && sensors.get_position().x - 0.01 < desired_position.x && 
@@ -162,6 +177,11 @@ int main(int argc, char **argv)
             timediff = currtime.toSec() - lasttime;
         }
     }
+
+    cyc.stamp.sec = ros::Time::now().toSec();
+    cyc.stamp.nsec = ros::Time::now().toNSec();
+    cyc.cycle = cycle;
+    cycle_pub.publish(cyc);
 
     return 0;
 }

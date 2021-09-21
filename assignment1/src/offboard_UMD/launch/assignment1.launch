@@ -3,12 +3,13 @@
 <launch>
 
     <arg name="fcu_url" default= "udp://:14540@200.0.0.1:14580" />
+    <arg name="is_record_position" default="true"/>
+    <arg name="bags_directory" value="/home/bags"/>
 
     <include file="$(find mavros)/launch/px4_virtual.launch">
     <arg name="fcu_url" value="$(arg fcu_url)" />
     </include>
 
-    
     <node pkg="offboard" name="offboard_node" type="offboard_node" />
 
 </launch>
