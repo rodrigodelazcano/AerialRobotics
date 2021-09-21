@@ -1,6 +1,6 @@
 /**
  * @file offb_node.cpp
- * @brief Offboard control example node, written with MAVROS version 0.19.x, PX4 Pro Flight
+ * @brief Offboard control example node, written with MAVROS version 0.019.x, PX4 Pro Flight
  * Stack and tested in Gazebo SITL
  * 
  * from https://docs.px4.io/master/en/ros/mavros_offboard.html
@@ -59,9 +59,9 @@ int main(int argc, char **argv)
         while(ros::ok() && timediff < 2)
         {
             takeoff.go_to_position(desired_position.x, desired_position.y, desired_position.z);
-            if (sensors.get_position().x + 0.01 > desired_position.x && sensors.get_position().x - 0.01 < desired_position.x && 
-                sensors.get_position().y + 0.01 > desired_position.y && sensors.get_position().y - 0.01 < desired_position.y &&
-                sensors.get_position().z + 0.01 > desired_position.z && sensors.get_position().z - 0.01 < desired_position.z)
+            if (sensors.get_position().x + 0.05 > desired_position.x && sensors.get_position().x - 0.05 < desired_position.x && 
+                sensors.get_position().y + 0.05 > desired_position.y && sensors.get_position().y - 0.05 < desired_position.y &&
+                sensors.get_position().z + 0.05 > desired_position.z && sensors.get_position().z - 0.05 < desired_position.z)
             {
                 if (lasttime == 0){
                     lasttime = ros::Time::now().toSec();
@@ -90,9 +90,9 @@ int main(int argc, char **argv)
         while(ros::ok() && timediff < 2)
         {
             takeoff.go_to_position(desired_position.x, desired_position.y, desired_position.z);
-            if (sensors.get_position().x + 0.01 > desired_position.x && sensors.get_position().x - 0.01 < desired_position.x && 
-                sensors.get_position().y + 0.01 > desired_position.y && sensors.get_position().y - 0.01 < desired_position.y &&
-                sensors.get_position().z + 0.01 > desired_position.z && sensors.get_position().z - 0.01 < desired_position.z)
+            if (sensors.get_position().x + 0.05 > desired_position.x && sensors.get_position().x - 0.05 < desired_position.x && 
+                sensors.get_position().y + 0.05 > desired_position.y && sensors.get_position().y - 0.05 < desired_position.y &&
+                sensors.get_position().z + 0.05 > desired_position.z && sensors.get_position().z - 0.05 < desired_position.z)
             {
                 if (lasttime == 0){
                     lasttime = ros::Time::now().toSec();
@@ -114,9 +114,9 @@ int main(int argc, char **argv)
         while(ros::ok() && timediff < 2)
         {
             takeoff.go_to_position(desired_position.x, desired_position.y, desired_position.z);
-            if (sensors.get_position().x + 0.01 > desired_position.x && sensors.get_position().x - 0.01 < desired_position.x && 
-                sensors.get_position().y + 0.01 > desired_position.y && sensors.get_position().y - 0.01 < desired_position.y &&
-                sensors.get_position().z + 0.01 > desired_position.z && sensors.get_position().z - 0.01 < desired_position.z)
+            if (sensors.get_position().x + 0.05 > desired_position.x && sensors.get_position().x - 0.05 < desired_position.x && 
+                sensors.get_position().y + 0.05 > desired_position.y && sensors.get_position().y - 0.05 < desired_position.y &&
+                sensors.get_position().z + 0.05 > desired_position.z && sensors.get_position().z - 0.05 < desired_position.z)
             {
                 if (lasttime == 0){
                     lasttime = ros::Time::now().toSec();
@@ -134,8 +134,8 @@ int main(int argc, char **argv)
         desired_position = sensors.get_position();
         desired_position.y += 5;
 
-        // stay for 2 seconds
-        while(ros::ok() && timediff < 2)3)
+        // stay for 3 seconds
+        while(ros::ok() && timediff < 5)
         {
             takeoff.go_to_position(desired_position.x, desired_position.y, desired_position.z);
             if (sensors.get_position().x + 0.01 > desired_position.x && sensors.get_position().x - 0.01 < desired_position.x && 
@@ -166,9 +166,9 @@ int main(int argc, char **argv)
     while(ros::ok() && timediff < 2)
     {
         takeoff.go_to_position(desired_position.x, desired_position.y, desired_position.z);
-        if (sensors.get_position().x + 0.01 > desired_position.x && sensors.get_position().x - 0.01 < desired_position.x && 
-            sensors.get_position().y + 0.01 > desired_position.y && sensors.get_position().y - 0.01 < desired_position.y &&
-            sensors.get_position().z + 0.01 > desired_position.z && sensors.get_position().z - 0.01 < desired_position.z)
+        if (sensors.get_position().x + 0.05 > desired_position.x && sensors.get_position().x - 0.05 < desired_position.x && 
+            sensors.get_position().y + 0.05 > desired_position.y && sensors.get_position().y - 0.05 < desired_position.y &&
+            sensors.get_position().z + 0.05 > desired_position.z && sensors.get_position().z - 0.05 < desired_position.z)
         {
             if (lasttime == 0){
                 lasttime = ros::Time::now().toSec();
