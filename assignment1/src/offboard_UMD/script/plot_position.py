@@ -64,8 +64,8 @@ for idx, tim in enumerate(time):
 
 fig1, ax1 = plt.subplots(figsize=(20,20))
 
-ax1.set_ylim([-6, 31])
-ax1.set_xlim([0, 340])
+ax1.set_ylim([-3, 33])
+ax1.set_xlim([0, 320])
 ax1.plot(time, x, linewidth=2.5, label='x')
 ax1.plot(time, y, linewidth=2.5, label='y')
 ax1.plot(time, z, linewidth=2.5, label='z')
@@ -81,8 +81,8 @@ for value in [5, 10, 25]:
 
 fig2, ax2 = plt.subplots(figsize=(20,20))
 
-ax2.set_ylim([-1, 2.5])
-ax2.set_xlim([0, 340])
+ax2.set_ylim([-1, 1.5])
+ax2.set_xlim([0, 320])
 ax2.plot(time, roll, linewidth=2.5, label='roll')
 ax2.plot(time, pitch, linewidth=2.5, label='pitch')
 ax2.plot(time, yaw, linewidth=2.5, label='yaw')
@@ -96,28 +96,28 @@ for c, tim in enumerate(cycle_time):
     ax1.annotate(s='', xy=(last_tim,28), xytext=(tim,28), arrowprops=dict(arrowstyle='<->'))
 
     ax2.axvline(x=tim, color='k', linestyle='--', alpha=0.4)
-    ax2.annotate(s='', xy=(last_tim,2.1), xytext=(tim,2.1), arrowprops=dict(arrowstyle='<->'))
+    ax2.annotate(s='', xy=(last_tim,1), xytext=(tim,1), arrowprops=dict(arrowstyle='<->'))
 
     if c == 0:
         l = "Takeoff"
     else:
         l = "Cycle {}".format(c)
 
-    ax1.text((tim-last_tim)/2 + last_tim, 29.5, l, horizontalalignment='center',
+    ax1.text((tim-last_tim)/2 + last_tim, 29.1, l, horizontalalignment='center',
         verticalalignment='center', weight='bold')
 
-    ax2.text((tim-last_tim)/2 + last_tim, 2.2, l, horizontalalignment='center',
+    ax2.text((tim-last_tim)/2 + last_tim, 1.1, l, horizontalalignment='center',
         verticalalignment='center', weight='bold')
 
     
     last_tim = tim
 
 ax1.annotate(s='', xy=(last_tim,28), xytext=(data[6, -1],28), arrowprops=dict(arrowstyle='<->'))
-ax1.text((data[6, -1]-last_tim)/2 + last_tim, 29.5, 'Landing', horizontalalignment='left',
+ax1.text((data[6, -1]-last_tim)/2 + last_tim, 29.5, 'Landing', horizontalalignment='center',
         verticalalignment='center', fontsize=10, weight='bold')
 
-ax2.annotate(s='', xy=(last_tim,2.1), xytext=(data[6, -1],2.1), arrowprops=dict(arrowstyle='<->'))
-ax2.text((data[6, -1]-last_tim)/2 + last_tim, 2.2, 'Landing', horizontalalignment='left',
+ax2.annotate(s='', xy=(last_tim,1), xytext=(data[6, -1],1), arrowprops=dict(arrowstyle='<->'))
+ax2.text((data[6, -1]-last_tim)/2 + last_tim, 1.1, 'Landing', horizontalalignment='center',
         verticalalignment='center', fontsize=10, weight='bold')
 
 
