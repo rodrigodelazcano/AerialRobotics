@@ -5,7 +5,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from tf.transformations import euler_from_quaternion
 
 # Read bag file
-bag = rosbag.Bag('2021-09-21-19-31-13.bag')
+bag = rosbag.Bag('2021-09-21-19-57-22.bag')
 
 x = []
 y = []
@@ -65,6 +65,7 @@ for idx, tim in enumerate(time):
 fig1, ax1 = plt.subplots(figsize=(20,20))
 
 ax1.set_ylim([-6, 31])
+ax1.set_xlim([0, 340])
 ax1.plot(time, x, linewidth=2.5, label='x')
 ax1.plot(time, y, linewidth=2.5, label='y')
 ax1.plot(time, z, linewidth=2.5, label='z')
@@ -72,12 +73,16 @@ ax1.set_title("XYZ Position", fontweight = 'heavy')
 ax1.set(xlabel="Time [s]", ylabel="Distance [m]")
 ax1.legend(shadow=True, fancybox=True, loc='upper right')
 
+for value in [5, 10, 25]:
+    ax1.axhline(y=value, color='k', linestyle='--', alpha=0.4)
+
 ## Plot orientation ##
 ######################
 
 fig2, ax2 = plt.subplots(figsize=(20,20))
 
 ax2.set_ylim([-1, 2.5])
+ax2.set_xlim([0, 340])
 ax2.plot(time, roll, linewidth=2.5, label='roll')
 ax2.plot(time, pitch, linewidth=2.5, label='pitch')
 ax2.plot(time, yaw, linewidth=2.5, label='yaw')
