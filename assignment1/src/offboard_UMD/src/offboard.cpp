@@ -93,7 +93,7 @@ int main(int argc, char **argv)
             takeoff.go_to_position(desired_position.x, desired_position.y, desired_position.z);
             if (sqrt(pow(sensors.get_position().x-desired_position.x, 2) + 
                 pow(sensors.get_position().y-desired_position.y, 2) + 
-                pow(sensors.get_position().z-desired_position.z, 2)) < 0.05)
+                pow(sensors.get_position().z-desired_position.z, 2)) < 0.01)
             {
                 if (lasttime == 0){
                     lasttime = ros::Time::now().toSec();
