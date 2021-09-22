@@ -49,5 +49,5 @@ python plot_position.py
 </p>
 
 <p align="center">
-<img  src="./docs/PlaneTrayectories.png"  alt="drawing" width="1000"/>
+<img  src="./docs/PlaneTrajectories.png"  alt="drawing" width="1000"/>
 </p>
