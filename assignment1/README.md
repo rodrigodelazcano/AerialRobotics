@@ -30,5 +30,17 @@ python plot_position.py
 ```
 
 <p align="center">
-<img  src="./docs/position.png"  alt="drawing" width="800"/>
+<img  src="./docs/position.png"  alt="drawing" width="1000"/>
+</p>
+
+<p align="center">
+<img  src="./docs/orientation.png"  alt="drawing" width="1000"/>
+</p>
+
+<p align="center">
+<img  src="./docs/3dtrajectory.png"  alt="drawing" width="1000"/>
+</p>
+
+<p align="center">
+<img  src="./docs/plane_trajectories.png"  alt="drawing" width="1000"/>
 </p>
