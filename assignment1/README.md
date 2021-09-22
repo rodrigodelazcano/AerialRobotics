@@ -12,7 +12,11 @@ The assignment consists of creating a rosnode that commands the drone to takeoff
 2. Move up (heave) 15 virtual meters.
 3. Move left 5 virtual meters.
 4. Return to (0,0,10).
-   
+
+<p align="center">
+  <img src="https://github.com/sandeep-kota/ARIAC_Group_1/blob/present/ariac_group_1/docs/gifs/flipping_parts.gif" alt="animated"/>
+</p>
+
 To achive this the desired drone position is published to the rostopic `/mavros/setpoint_position/local/`. The final destionatipon is checked subscibing to the rostopic `mavros/local_position/pose` with a threshold of 0.05.
 
 To plot the information from the trajectory of the drone the following rosbag command is executed in the terminal while the drone follows its trajectory:
