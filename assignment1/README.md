@@ -15,4 +15,10 @@ The assignment consists of creating a rosnode that commands the drone to takeoff
    
 To achive this the desired drone position is published to the rostopic `/mavros/setpoint_position/local/`. The final destionatipon is checked subscibing to the rostopic `mavros/local_position/pose` with a threshold of 0.05.
 
-Also 
+To plot the information from the trajectory of the drone the following rosbag command is executed in the terminal while the drone follows its trajectory:
+```
+    rosbag record /mavros/path_cycle /mavros/local_position/pose
+```
+ The rostopic `/mavros/path_cycle` publishes a new custom rosmessage type, `cycle.msg`. This rosmessage contains the cycle count of the trajectory and the timestamp when it started.
+
+Plots of the position (X,Y,Z) and orientation (Roll, Pitch, Yaw) of the drone with respect to time are given, as well as the 3D trajectory of the drone and the drone position in the planes (X, Y), (X,Z) and (Y,Z).

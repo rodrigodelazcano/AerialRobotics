@@ -5,7 +5,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from tf.transformations import euler_from_quaternion
 
 # Read bag file
-bag = rosbag.Bag('2021-09-21-19-19-58.bag')
+bag = rosbag.Bag('2021-09-21-19-31-13.bag')
 
 x = []
 y = []
