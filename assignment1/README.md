@@ -14,7 +14,7 @@ The assignment consists of creating a rosnode that commands the drone to takeoff
 4. Return to (0,0,10).
 
 <p align="center">
-  <img src="https://github.com/sandeep-kota/ARIAC_Group_1/blob/present/ariac_group_1/docs/gifs/flipping_parts.gif" alt="animated"/>
+  <img src="https://github.com/rodrigodelazcano/AerialRobotics/blob/assignment_1/assignment1/docs/jmavsim.gif" alt="animated"/>
 </p>
 
 To achive this the desired drone position is published to the rostopic `/mavros/setpoint_position/local/`. The final destionatipon is checked subscibing to the rostopic `mavros/local_position/pose` with a threshold of 0.05.
