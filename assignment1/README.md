@@ -20,6 +20,19 @@ The assignment consists of creating a rosnode that commands the drone to takeoff
 
 To achive this the desired drone position is published to the rostopic `/mavros/setpoint_position/local/`. The final destionatipon is checked subscibing to the rostopic `mavros/local_position/pose` with an Euclidian distance threshold of 0.05.
 
+To run the simulation control execute the following commands in order in your terminal after cloning the repository and while having jMAVSim as well as QGroundControl running:
+```
+cd ~/aerialrobotics/assignment1
+
+catkin init
+
+catkin build
+
+source devel/setup.bash
+
+roslaunch offboard assignment1.launch
+``` 
+
 ## Plotting
 To plot the information from the trajectory of the drone the following rosbag command is executed in the terminal while the drone follows its trajectory:
 ```
