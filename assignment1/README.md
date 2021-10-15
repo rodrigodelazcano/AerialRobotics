@@ -18,7 +18,7 @@ The assignment consists of creating a rosnode that commands the drone to takeoff
   <img src="https://github.com/rodrigodelazcano/AerialRobotics/blob/assignment_1/assignment1/docs/jmavsim.gif" alt="animated"/>
 </p>
 
-To achive this the desired drone position is published to the rostopic `/mavros/setpoint_position/local/`. The final destionatipon is checked subscibing to the rostopic `mavros/local_position/pose` with an Euclidian distance threshold of 0.05.
+To achive this the desired drone position is published to the rostopic `/mavros/setpoint_position/local/`. The final destionation is checked by subscribing to the rostopic `mavros/local_position/pose` with an Euclidian distance threshold of 0.05.
 
 To run the simulation control execute the following commands in order in your terminal after cloning the repository and while having jMAVSim as well as QGroundControl running:
 ```
