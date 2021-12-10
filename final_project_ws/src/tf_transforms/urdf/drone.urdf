@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version:   Build Version: 1.5.7587.4286
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="modalai">
+  
+  <link
+    name="body_mavros">
+  </link>
+  <link
+    name="body_voxl">
+  </link>
+  <link
+    name="tracking_cam">
+  </link>
+	
+<joint
+    name="body_mavros_to_body_voxl"
+    type="fixed">
+    <origin
+      xyz="0.0 0.0 0.0"
+      rpy="3.14 0.0 1.57" />
+    <parent
+      link="body_mavros" />
+    <child
+      link="body_voxl" />
+  </joint>
+  <joint
+    name="body_voxl_to_tracking_camera"
+    type="fixed">
+    <origin
+      xyz="0.017 0.015 0.013"
+      rpy="0.785398 0.0 3.14" />
+    <parent
+      link="body_voxl" />
+    <child
+      link="tracking_cam" />
+  </joint>
+</robot>
