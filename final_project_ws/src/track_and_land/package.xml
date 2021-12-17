@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>tf_transforms</name>
+  <name>track_and_land</name>
   <version>0.0.0</version>
   <description>Package to identify the drones extrinsic transformations</description>
 
