@@ -49,7 +49,14 @@
    <node
       name="mission_planner"
       pkg="tf_transforms"
-      type="mp.py" />
+      type="mp.py"
+      output="screen" />
+   
+   <node
+      name="pid_controller"
+      pkg="tf_transforms"
+      type="pid.py" 
+      />
 
 
    <node

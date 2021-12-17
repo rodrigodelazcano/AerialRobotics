@@ -31,8 +31,8 @@ def detection_cb(msg):
 	global first_detection_flag, stage_idx, detection_counter
 	if (msg.data):
 		detection_counter = detection_counter + 1
-
-	if ((msg.data) and (first_detection_flag) and (detection_counter > 10)):
+                print('detection counter ', detection_counter)
+	if ((msg.data) and (first_detection_flag) and (detection_counter > 15)):
 		first_detection_flag = False
 		stage_idx = 2
 		print("  >> Target Found, Stage 1 complete")
@@ -50,7 +50,10 @@ def reached_waypoint(wp_x, wp_y, wp_z):
 	dy = (pose_msg.pose.position.y - wp_y)
 	dz = (pose_msg.pose.position.z - wp_z)
 	distance = math.sqrt(dx*dx + dy*dy + dz*dz)
-	THRESHOLD = 0.15
+	if (stage_idx==1 or stage_idx ==3):
+		THRESHOLD = 0.2
+	if stage_idx==2:
+		THRESHOLD = 0.2
 	flag = False
 
 	if ((THRESHOLD > abs(dx)) and (THRESHOLD > abs(dy)) and (THRESHOLD > abs(dz))):
@@ -70,6 +73,7 @@ def main():
 
 	pos_sp_pub = rospy.Publisher("/mavros/setpoint_position/local", PoseStamped, queue_size=1)
 	stage_idx_pub  = rospy.Publisher("drone/stage_idx", Int64, queue_size=1)
+	reference_pub = rospy.Publisher('/drone/reference_goal', PoseStamped, queue_size=1)
 	rate = rospy.Rate(20.0)
 
 	global pose_msg, target_msg, target_detected, state_msg, vel_local_msg
@@ -88,40 +92,63 @@ def main():
 	wp = np.zeros((4,3))
 	wp[0][0], wp[0][1], wp[0][2] =  0.0, 0.0, 0.0
 	wp[1][0], wp[1][1], wp[1][2] =  0.0, 0.0, 1.5
-	wp[2][0], wp[2][1], wp[2][2] =  2, 0.0, 1.5
-	wp[3][0], wp[3][1], wp[3][2] =  0.0, 0.0, 1.5    
+	wp[2][0], wp[2][1], wp[2][2] =  4, 0.0, 1.5
+	wp[3][0], wp[3][1], wp[3][2] =  0.0, 0.0, 1.5   
 	pos_sp_msg = PoseStamped()
 
 	wp_idx = int(1)
 	number_of_waypoints, _ = wp.shape
 
-	delta_x = 0.5
+	delta_x = 1.0
 	delta_z = 0.5
-	vz = delta_z/1.0
+	vz = 2.5
 
 	print("here")
 
 	listener = tf.TransformListener()
 
+	dt = 1.0/20.0
+
+	radius = 1
+	cycle_s = 30
+	steps = cycle_s*20
+	pi = 3.14159265358979323846264338327950
+	d_angle = (360.0/float(steps))*pi/180.0
+	i = 0
 	while not rospy.is_shutdown():	
 
 		# wait for offboard mode 
 		if ((state_msg.mode == "OFFBOARD") and(state_msg.armed == True)):
 
 			if (stage_idx == 1):
-				# proceed to the next waypoint
+				#proceed to the next waypoint
+
 				dist, at_wp = reached_waypoint(wp[wp_idx][0], wp[wp_idx][1], wp[wp_idx][2])
 				if (at_wp):
-					wp_idx = wp_idx + 1
-					if wp_idx > number_of_waypoints-1:
-						break
+				 	wp_idx = wp_idx + 1
+				 	if wp_idx > number_of_waypoints-1:
+				 		break
 				else:
 					print(round(dist,2), wp_idx, stage_idx)
-					pos_sp_msg.header.stamp = rospy.Time.now()
-					pos_sp_msg.pose.position.x = wp[wp_idx][0]
-					pos_sp_msg.pose.position.y = wp[wp_idx][1]
-					pos_sp_msg.pose.position.z = wp[wp_idx][2]
-					pos_sp_pub.publish(pos_sp_msg)
+				pos_sp_msg.header.stamp = rospy.Time.now()
+				pos_sp_msg.pose.position.x = wp[wp_idx][0]
+				pos_sp_msg.pose.position.y = wp[wp_idx][1] 
+				pos_sp_msg.pose.position.z = wp[wp_idx][2]
+				yaw = math.atan2(pos_sp_msg.pose.position.y, pos_sp_msg.pose.position.x) + pi
+				quaternion = tf.transformations.quaternion_from_euler(0, 0, yaw)
+
+				pos_sp_msg.pose.orientation.x = 0
+				pos_sp_msg.pose.orientation.y = 0
+				pos_sp_msg.pose.orientation.z = 0
+				pos_sp_msg.pose.orientation.w = 1 
+				
+		
+				pos_sp_pub.publish(pos_sp_msg)
+			
+
+
+
+
 			
 			# maneuver behind target
 			if (stage_idx == 2):
@@ -146,12 +173,12 @@ def main():
 					pos_sp_msg.pose.orientation.z = target_msg.pose.pose.orientation.z
 					pos_sp_msg.pose.orientation.w = target_msg.pose.pose.orientation.w
 				dist, at_wp = reached_waypoint(pos_sp_msg.pose.position.x, pos_sp_msg.pose.position.y, pos_sp_msg.pose.position.z)
-				if (at_wp):
+				if (at_wp and detection_counter > 20):
 					stage_idx = stage_idx + 1
 					print("  >> Stage 2 complete")
 				else:
 					pos_sp_msg.header.stamp = rospy.Time.now()
-					pos_sp_pub.publish(pos_sp_msg)	
+					reference_pub.publish(pos_sp_msg)	
 					print(round(dist,2), stage_idx)		
 
 			# maneuver above target 
@@ -183,13 +210,13 @@ def main():
 					t4 = time.time()
 				else:
 					pos_sp_msg.header.stamp = rospy.Time.now()
-					pos_sp_pub.publish(pos_sp_msg)	
+					reference_pub.publish(pos_sp_msg)	
 					print(round(dist,2), stage_idx)	
 
 			# slowly descend onto target 
 			if (stage_idx == 4):
 				print("  >> Beginning final descent...")
-				time_to_descend = 5.0
+				time_to_descend = 2.5
 				t4 = time.time()
 				landed = False
 
@@ -218,7 +245,7 @@ def main():
 					
 					
 					pos_sp_msg.header.stamp = rospy.Time.now()
-					pos_sp_pub.publish(pos_sp_msg)	
+					reference_pub.publish(pos_sp_msg)	
 					
 					# either descend for some fixed time or detect when on ground 
 					if ((time.time() - t4 > time_to_descend) or (ext_state_msg.landed_state == 1)):

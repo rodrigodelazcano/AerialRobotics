@@ -18,8 +18,8 @@ def half_kf(x0, P0):
 	global dt
 	A = np.matrix([[1, dt], [0, 1]])
 	C = np.array([[1, 0]])
-	Q = 0.1*np.identity(2)
-	R = 0.1
+	Q = 0.5*np.identity(2)
+	R = 0.5
 
 	# predict
 	x = A*x0 # np.multiply(A, x0)
@@ -33,8 +33,8 @@ def full_kf(x0, z, P0):
 	global dt
 	A = np.matrix([[1, dt], [0, 1]])
 	C = np.array([[1, 0]])
-	Q = 0.1*np.identity(2)
-	R = 0.1
+	Q = 0.05*np.identity(2)
+	R = 0.05
 
 	# predict
 	x = A*x0 # np.multiply(A, x0)
@@ -142,7 +142,7 @@ def main():
 		t_over_tag.header.frame_id = "world"
 		t_over_tag.child_frame_id = "goal_over_tag"
 		t_over_tag.transform.translation.x = kf_msg.pose.pose.position.x
-		t_over_tag.transform.translation.y = kf_msg.pose.pose.position.y
+		t_over_tag.transform.translation.y = kf_msg.pose.pose.position.y - 0.07
 		t_over_tag.transform.translation.z = kf_msg.pose.pose.position.z
 
 		t_over_tag.transform.rotation.x = q[0]
@@ -156,9 +156,9 @@ def main():
 		t_behind_tag.header.stamp = rospy.Time.now()
 		t_behind_tag.header.frame_id = "goal_over_tag"
 		t_behind_tag.child_frame_id = "goal_behind_tag"
-		t_behind_tag.transform.translation.x = -0.5
-		t_behind_tag.transform.translation.y = 0.0
-		t_behind_tag.transform.translation.z = 0.5
+		t_behind_tag.transform.translation.x = -1
+		t_behind_tag.transform.translation.y = -0.07
+		t_behind_tag.transform.translation.z = 1
 
 		t_behind_tag.transform.rotation.x = 0
 		t_behind_tag.transform.rotation.y = 0

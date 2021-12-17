@@ -8,7 +8,8 @@ from std_msgs.msg import Int64, Bool
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import PoseStamped, TwistStamped
 from mavros_msgs.msg import PositionTarget, State, ExtendedState
-import mavros_msgs.srv 
+import mavros_msgs.srv
+from tf.transformations import euler_from_quaternion, quaternion_from_euler
 import tf
 
 def ext_state_cb(msg):
@@ -68,6 +69,8 @@ def main():
 	rospy.Subscriber("/mavros/extended_state", ExtendedState, ext_state_cb)
 
 	pos_sp_pub = rospy.Publisher("/mavros/setpoint_position/local", PoseStamped, queue_size=1)
+	vel_pub = rospy.Publisher("/mavros/setpoint_velocity/cmd_vel", TwistStamped, queue_size=10)
+	reference_pub = rospy.Publisher('/drone/reference_goal', PoseStamped, queue_size=1)
 	stage_idx_pub  = rospy.Publisher("drone/stage_idx", Int64, queue_size=1)
 	rate = rospy.Rate(20.0)
 
@@ -79,6 +82,7 @@ def main():
 	ext_state_msg = ExtendedState()
 	stage_idx_msg = Int64()
 	vel_local_msg = TwistStamped()
+	vel_cmd_msg = TwistStamped()
 	stage_idx = int(1)
 	detection_counter = 0
 	target_detected = False
@@ -97,35 +101,53 @@ def main():
 
 	print("here")
 
+	vel_cmd_msg.twist.linear.x = 0.2
+	at_wp = False
 	while not rospy.is_shutdown():	
 
 		# wait for offboard mode 
 		if ((state_msg.mode == "OFFBOARD") and(state_msg.armed == True)):
 
 			if (stage_idx == 1):
-				# proceed to the next waypoint
+				
+				# vel_pub.publish(vel_cmd_msg)
+				pos_sp_msg.header.stamp = rospy.Time.now()
+				pos_sp_msg.pose.position.x = 0
+				pos_sp_msg.pose.position.y = 0
+				pos_sp_msg.pose.position.z = 1
+				pos_sp_msg.pose.orientation.x = 0.0
+				pos_sp_msg.pose.orientation.y = 0.0
+				pos_sp_msg.pose.orientation.z = 0.0
+				pos_sp_msg.pose.orientation.w = 1.0
+				pos_sp_pub.publish(pos_sp_msg)
 				dist, at_wp = reached_waypoint(wp[wp_idx][0], wp[wp_idx][1], wp[wp_idx][2])
 				if (at_wp):
-					wp_idx = wp_idx + 1
-					if wp_idx > number_of_waypoints-1:
-						break
-				else:
-					print(round(dist,2), wp_idx, stage_idx)
-					pos_sp_msg.header.stamp = rospy.Time.now()
-					pos_sp_msg.pose.position.x = wp[wp_idx][0]
-					pos_sp_msg.pose.position.y = wp[wp_idx][1]
-					pos_sp_msg.pose.position.z = wp[wp_idx][2]
-					pos_sp_msg.pose.orientation.x = 0.0
-					pos_sp_msg.pose.orientation.y = 0.0
-					pos_sp_msg.pose.orientation.z = 0.0
-					pos_sp_msg.pose.orientation.w = 1.0
-					pos_sp_pub.publish(pos_sp_msg)
+					stage_idx = 2
+				print(round(dist,2), wp_idx, stage_idx)
+
+			if stage_idx==2:
+
+				pos_sp_msg.header.stamp = rospy.Time.now()
+				pos_sp_msg.pose.position.x = 2
+				pos_sp_msg.pose.position.y = 0
+				pos_sp_msg.pose.position.z = 2
+                                q  = quaternion_from_euler(0,0,0.7)
+				pos_sp_msg.pose.orientation.x = q[0]
+				pos_sp_msg.pose.orientation.y = q[1]
+				pos_sp_msg.pose.orientation.z = q[2]
+				pos_sp_msg.pose.orientation.w = q[3]
+				reference_pub.publish(pos_sp_msg)
+
 		else:
 			pos_sp_msg.header.stamp = rospy.Time.now()
 			pos_sp_msg.pose.position.x = 0
 			pos_sp_msg.pose.position.y = 0
 			pos_sp_msg.pose.position.z = 0
 			pos_sp_pub.publish(pos_sp_msg)
+		
+		stage_idx_msg.data = stage_idx
+		stage_idx_pub.publish(stage_idx_msg)
+		rate.sleep()
 
 	# land and disarm
 	rospy.wait_for_service("/mavros/set_mode")
